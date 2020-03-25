@@ -46,6 +46,12 @@ def run():
         ),
     )
     parser.add_argument(
+        "-L",
+        "--list",
+        action="store_true",
+        help="List available channels and users"
+    )
+    parser.add_argument(
         "-T",
         "--team",
         help="""Team domain to interact with. This is the name that appears in the Slack
@@ -122,6 +128,11 @@ def run():
         last_messages(args.src, args.last)
         return 0
 
+    # list channels and users
+    if args.list:
+        print('\n'.join(resource_completer()))
+        return 0
+
     ### Send messages
 
     # Send file
@@ -145,16 +156,17 @@ def run():
 
 # pylint: disable=too-many-return-statements
 def args_error_message(args):
-    if args.dst and args.src:
-        return "Incompatible arguments: --src and --dst\n"
-    if not args.dst and not args.src:
-        return "Invalid arguments: one of --src or --dst must be specified\n"
-    if args.dst and args.last:
-        return "Incompatible arguments: --dst and --last\n"
-    if args.src and args.file:
-        return "Incompatible arguments: --src and --file\n"
-    if args.file and args.messages:
-        return "Incompatible arguments: `messages` and --file\n"
+    if not args.list:
+        if args.dst and args.src:
+            return "Incompatible arguments: --src and --dst\n"
+        if not args.dst and not args.src:
+            return "Invalid arguments: one of --src or --dst must be specified\n"
+        if args.dst and args.last:
+            return "Incompatible arguments: --dst and --last\n"
+        if args.src and args.file:
+            return "Incompatible arguments: --src and --file\n"
+        if args.file and args.messages:
+            return "Incompatible arguments: `messages` and --file\n"
 
     return None
 
